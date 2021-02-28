@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h1>Simple Chat</h1>
+
+    Name: <input id="nameInput" />
+
+    <br />
+
+    <div id="messageWrapper">
+        <ul id="messageList">
+        </ul>
+    </div>
+
+    <button id="sendButton">Send</button>
+    <input id="msgInput" />
+
+    <script>
+        // when browser finishes loading page
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById("sendButton").onclick = sendMessage;
+
+            // request messages regularly
+            setInterval(() => {
+                getMessages();
+            }, 500);
+        }, false);
+
+        function sendMessage() {
+            let msgInput = document.getElementById("msgInput");
+            let nameInput = document.getElementById("nameInput");
+            fetch('message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user: nameInput.value,
+                    message: msgInput.value
+                }),
+            });
+        }
+
+        function getMessages() {
+            fetch("message")
+                .then(function (res) {
+                    return res.json();
+                })
+                .then(function (msgs) {
+                    processMessages(msgs);
+                });
+        }
+
+        // logic for added messages from server to gui
+        function processMessages(msgs) {
+            let ul = document.getElementById("messageList");
+            ul.innerHTML = "";
+
+            msgs.forEach(msg => {
+                let li = document.createElement("li");
+                li.appendChild(document.createTextNode(`${msg.user}: ${msg.message}`));
+                ul.appendChild(li)
+            });
+        }
+    </script>
+</body>
+
+</html>
