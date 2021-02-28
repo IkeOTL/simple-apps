@@ -13,16 +13,14 @@
         </ul>
     </div>
 
-    <button id="sendButton">Send</button>
+    <button id="sendButton" onclick="sendMessage()">Send</button>
     <input id="msgInput" />
 
     <script>
         // when browser finishes loading page
         document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById("sendButton").onclick = sendMessage;
-
             // request messages regularly
-            setInterval(() => {
+            setInterval(function () {
                 getMessages();
             }, 500);
         }, false);
@@ -57,7 +55,7 @@
             let ul = document.getElementById("messageList");
             ul.innerHTML = "";
 
-            msgs.forEach(msg => {
+            msgs.forEach(function (msg) {
                 let li = document.createElement("li");
                 li.appendChild(document.createTextNode(`${msg.user}: ${msg.message}`));
                 ul.appendChild(li)
